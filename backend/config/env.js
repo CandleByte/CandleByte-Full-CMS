@@ -7,7 +7,7 @@ if (!process.env.JWT_SECRET) {
 }
 
 const env = {
-    PORT: process.env.PORT || '5000',
+    PORT: process.env.PORT || '5001',
     JWT_SECRET: process.env.JWT_SECRET
 }
 
