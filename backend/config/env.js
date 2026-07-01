@@ -8,8 +8,12 @@ if (!process.env.JWT_SECRET) {
 
 const env = {
     PORT: process.env.PORT || '5001',
-    JWT_SECRET: process.env.JWT_SECRET
+    JWT_SECRET: process.env.JWT_SECRET,
+    MONGO_URI: process.env.URI,
 }
+
+
+
 
 export default env;
 
