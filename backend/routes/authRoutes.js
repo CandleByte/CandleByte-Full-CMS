@@ -1,5 +1,10 @@
-import bcrypt from "bcryptjs";
-import env from "../config/env.js";
-import jwt from "jsonwebtoken";
-import User from "../models/userModel.js";
+import express from 'express';
+import { login, register } from '../controllers/authController.js';
+
+const router = express.Router();
+
+router.post('/register', register);
+router.post('/login', login);
+
+export default router;
 
