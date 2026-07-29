@@ -16,7 +16,8 @@ const projectSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'active', 'completed', 'archived']
+        enum: ['pending', 'active', 'completed', 'archived'],
+        default: 'pending'
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
@@ -28,8 +29,8 @@ const projectSchema = new mongoose.Schema({
         ref: 'User'
     }],
     requirements: {
-        type: Mixed
+        type: mongoose.Schema.Types.Mixed
     }
 }, { timestamps: true });
 
-export default mongoose.model('Project', projectShema);
+export default mongoose.model('Project', projectSchema);
