@@ -31,6 +31,17 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    githubAccessToken: {
+        type: String,
+        required: false,
+        default: null,
+        select: false
+    },
+    githubUsername: {
+        type: String,
+        required: false,
+        default: null
+    }
 },
     { timestamps: true }
 );
