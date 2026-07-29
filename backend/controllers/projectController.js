@@ -53,7 +53,7 @@ export const updateProject = async (req, res) => {
     try {
         const { name, description, status, requirements, members } = req.body;
         const fields = { name, description, status, requirements, members };
-        const project = await Project.findByIdAndUpdate(req.params.id, fields, { new: true, runValidators: true });
+        const project = await Project.findByIdAndUpdate(req.params.id, fields, { returnDocument: 'after', runValidators: true });
         if (project == null) {
             res.status(404).json({ message: 'Project not found' });
         } else {

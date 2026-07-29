@@ -2,6 +2,7 @@ import express from 'express';
 import authRoutes from './routes/authRoutes.js';
 import auth from './middleware/auth.js';
 import projectRoutes from './routes/projectRoutes.js';
+import githubRoutes from './routes/githubRoutes.js';
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.get('/', (req, res) => {
 });
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
+app.use('/api/github', githubRoutes);
 app.get('/api/protected', auth, (req, res) => {
     res.send({ message: "This is a protected route.", user: req.user });
 });
