@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import env from '../config/env.js';
 import User from '../models/User.js';
+import { getFile, createFile } from '../services/githubService.js';
 
 export const connectGithub = (req, res) => {
     const state = jwt.sign({ userId: req.user.userId }, env.JWT_SECRET, { expiresIn: '10m' });
@@ -55,3 +56,24 @@ export const githubCallback = async (req, res) => {
     }
 }
 
+export const testGithubWrite = async (req, res) => {
+    const user = await User.findById(req.user.userId).select('+githubAccessToken');
+
+    if (!user || !user.githubAccessToken) {
+        return res.status(400).json({ message: 'GitHub account not connected.' });
+    }
+
+    try {
+        const result = await createFile(
+            user.githubAccessToken,
+            'CandleByte',
+            'CMS_test',
+            'docs/hello.md',
+            '# Hello from CandleByte CMS\nThis is a test file created via the GitHub API.',
+            'Add hello.md via API'
+        );
+        res.status(201).json({ message: 'File created successfully on GitHub.', result });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
