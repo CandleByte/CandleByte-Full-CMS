@@ -39,3 +39,33 @@ export const createFile = async (token, owner, repo, path, content, message) => 
     const data = await response.json();
     return { sha: data.content.sha, path: data.content.path };
 };
+
+export const updateFile = async (token, owner, repo, path, content, message, sha) => {
+    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github+json',
+            'User-Agent': 'candlebyte-cms'
+        },
+        body: JSON.stringify({
+            message: message,
+            content: Buffer.from(content).toString('base64'),
+            sha: sha
+        })
+    });
+
+    if (!response.ok) {
+        if (response.status === 409) {
+            const err = new Error('Conflict: The file has been modified since you last fetched it. Please fetch the latest version and try again.');
+            err.status = 409;
+            throw err;
+        }
+        const err = await response.json().catch(() => ({}));
+        throw new Error(`Github ${response.status}: ${err.message || response.statusText}`);
+    }
+
+    const data = await response.json();
+    return { sha: data.content.sha, path: data.content.path };
+};
+
