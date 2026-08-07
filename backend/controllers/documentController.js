@@ -120,3 +120,14 @@ export const updateDocument = async (req, res) => {
         res.status(err.status || 500).json({ message: err.message || 'An error occurred while updating the document.' });
     }
 }
+
+export const getDocumentsByProject = async (req, res) => {
+    try {
+        const documents = await Document.find({ project: req.params.projectId });
+        return res.status(200).json(documents);
+    }
+    catch (err) {
+        res.status(err.status || 500).json({ message: err.message || 'An error occurred while fetching documents for the project.' });
+    }
+}
+
