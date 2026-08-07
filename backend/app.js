@@ -3,6 +3,7 @@ import authRoutes from './routes/authRoutes.js';
 import auth from './middleware/auth.js';
 import projectRoutes from './routes/projectRoutes.js';
 import githubRoutes from './routes/githubRoutes.js';
+import documentRoutes from './routes/documentRoutes.js';
 
 const app = express();
 
@@ -16,6 +17,6 @@ app.use('/api/github', githubRoutes);
 app.get('/api/protected', auth, (req, res) => {
     res.send({ message: "This is a protected route.", user: req.user });
 });
-
+app.use('/api/documents', documentRoutes);
 export default app;
 
