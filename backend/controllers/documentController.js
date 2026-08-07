@@ -15,6 +15,7 @@ const getGithubToken = async (userId) => {
 
 export const createDocument = async (req, res) => {
     try {
+
         const { title, kind, project, content, owner, repo, path, branch } = req.body;
 
         if (!title || !kind || !project) {
@@ -35,9 +36,12 @@ export const createDocument = async (req, res) => {
 
         if (kind === 'git') {
             if (!content || !owner || !repo || !path) {
+
                 return res.status(400).json({ message: 'Content, owner, repo, and path are required for Git documents.' });
             }
             const token = await getGithubToken(req.user.userId);
+
+
             const file = await createFile(token, owner, repo, path, content, `Create ${title} via CandleByte CMS`);
 
             const newDocument = new Document({

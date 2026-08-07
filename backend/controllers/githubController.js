@@ -56,7 +56,7 @@ export const githubCallback = async (req, res) => {
     }
 }
 
-export const testGithubWrite = async (req, res) => {
+/*export const testGithubWrite = async (req, res) => {
     const user = await User.findById(req.user.userId).select('+githubAccessToken');
 
     if (!user || !user.githubAccessToken) {
@@ -76,4 +76,4 @@ export const testGithubWrite = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
-};
+};*/
