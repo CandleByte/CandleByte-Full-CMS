@@ -1,6 +1,6 @@
 import Document from '../models/Document.js';
 import User from '../models/User.js';
-import { getFile, createFile, updateFile } from '../services/githubService.js';
+import { getFile, createFile, updateFile, deleteFile } from '../services/githubService.js';
 
 const getGithubToken = async (userId) => {
     const user = await User.findById(userId).select('+githubAccessToken');
@@ -135,3 +135,26 @@ export const getDocumentsByProject = async (req, res) => {
     }
 }
 
+export const deleteDocument = async (req, res) => {
+    try {
+        const document = await Document.findById(req.params.id);
+        if (!document) {
+            return res.status(404).json({ message: 'Document not found' });
+        }
+        if (document.kind === 'native') {
+            await document.deleteOne();
+            return res.status(200).json({ message: 'Document deleted successfully,' });
+        }
+        if (document.kind === 'git') {
+            const token = await getGithubToken(req.user.userId);
+            await deleteFile(token, document.owner, document.repo, document.path, `Delete ${document.title} via CandleByte CMS`, document.sha);
+            await document.deleteOne();
+            return res.status(200).json({ message: 'Document deleted successfully,' });
+        }
+        if (document.kind === 'upload') {
+            return res.status(400).json({ message: 'Uploads are not supported yet.' });
+        }
+    } catch (err) {
+        res.status(err.status || 500).json({ message: err.message || 'An error occurred while deleting the document.' });
+    }
+}
