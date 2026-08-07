@@ -85,3 +85,38 @@ export const getDocument = async (req, res) => {
         res.status(err.status || 500).json({ message: err.message || 'An error occurred while fetching the document.' });
     }
 }
+
+export const updateDocument = async (req, res) => {
+    const { content } = req.body;
+    try {
+        const document = await Document.findById(req.params.id);
+        if (!document) {
+            return res.status(404).json({ message: 'Document not found' });
+        }
+        if (!content) {
+            return res.status(400).json({ message: 'Content is required for updating the document.' });
+        }
+        if (document.kind === 'native') {
+            document.content = content;
+            document.lastEditedBy = req.user.userId;
+            await document.save();
+            return res.status(200).json(document);
+        }
+
+        if (document.kind === 'git') {
+            const token = await getGithubToken(req.user.userId);
+            const updatedFile = await updateFile(token, document.owner, document.repo, document.path, content, `Update ${document.title} via CandleByte CMS`, document.sha);
+            document.content = content;
+            document.sha = updatedFile.sha;
+            document.lastEditedBy = req.user.userId;
+            await document.save();
+            return res.status(200).json(document);
+        }
+
+        if (document.kind === 'upload') {
+            return res.status(400).json({ message: 'Uploads are not supported yet.' });
+        }
+    } catch (err) {
+        res.status(err.status || 500).json({ message: err.message || 'An error occurred while updating the document.' });
+    }
+}
