@@ -1,6 +1,7 @@
 import Document from '../models/Document.js';
 import User from '../models/User.js';
 import { getFile, createFile, updateFile, deleteFile } from '../services/githubService.js';
+import { uploadS3File, getS3FileUrl, deleteS3File } from '../services/s3Service.js';
 
 const getGithubToken = async (userId) => {
     const user = await User.findById(userId).select('+githubAccessToken');
@@ -54,7 +55,23 @@ export const createDocument = async (req, res) => {
             await newDocument.save();
             return res.status(201).json(newDocument);
         }
-        return res.status(400).json({ message: 'Uploads are not supported yet.' });
+
+        if (kind === 'upload') {
+            const file = req.file;
+            if (!file) {
+                return res.status(400).json({ message: 'File is required for upload documents.' });
+            }
+            const key = `${project}/${Date.now()}-${file.originalname}`;
+            await uploadS3File(file.buffer, key, file.mimetype);
+            const newDocument = new Document({
+                title, kind, project, fileUrl: key, mimeType: req.file.mimetype, fileSize: req.file.size,
+                createdBy: req.user.userId
+            });
+
+            await newDocument.save();
+            return res.status(201).json(newDocument);
+        }
+
     } catch (err) {
         res.status(err.status || 500).json({ message: err.message || 'An error occurred while creating the document.' });
     }
@@ -82,25 +99,27 @@ export const getDocument = async (req, res) => {
             return res.status(200).json(document);
         }
         if (document.kind === 'upload') {
-            return res.status(400).json({ message: 'Uploads are not supported yet.' });
+            const fileUrl = await getS3FileUrl(document.fileUrl);
+            return res.status(200).json({ ...document.toObject(), fileUrl });
         }
-    }
-    catch (err) {
+
+    } catch (err) {
         res.status(err.status || 500).json({ message: err.message || 'An error occurred while fetching the document.' });
     }
 }
 
 export const updateDocument = async (req, res) => {
-    const { content } = req.body;
+    const { content, title } = req.body;
     try {
         const document = await Document.findById(req.params.id);
         if (!document) {
             return res.status(404).json({ message: 'Document not found' });
         }
-        if (!content) {
-            return res.status(400).json({ message: 'Content is required for updating the document.' });
-        }
+
         if (document.kind === 'native') {
+            if (!content) {
+                return res.status(400).json({ message: 'Content is required for updating the document.' });
+            }
             document.content = content;
             document.lastEditedBy = req.user.userId;
             await document.save();
@@ -108,6 +127,9 @@ export const updateDocument = async (req, res) => {
         }
 
         if (document.kind === 'git') {
+            if (!content) {
+                return res.status(400).json({ message: 'Content is required for updating the document.' });
+            }
             const token = await getGithubToken(req.user.userId);
             const updatedFile = await updateFile(token, document.owner, document.repo, document.path, content, `Update ${document.title} via CandleByte CMS`, document.sha);
             document.content = content;
@@ -118,8 +140,31 @@ export const updateDocument = async (req, res) => {
         }
 
         if (document.kind === 'upload') {
-            return res.status(400).json({ message: 'Uploads are not supported yet.' });
+            if (!req.file && !title) {
+                return res.status(400).json({ message: 'Nothing to update. Send a file or a title.' });
+            }
+
+            if (req.file) {
+                const oldKey = document.fileUrl;
+                const newKey = `${document.project}/${Date.now()}-${req.file.originalname}`;
+
+                await uploadS3File(req.file.buffer, newKey, req.file.mimetype);
+                await deleteS3File(oldKey);
+
+                document.fileUrl = newKey;
+                document.mimeType = req.file.mimetype;
+                document.fileSize = req.file.size;
+            }
+
+            if (title) {
+                document.title = title;
+            }
+
+            document.lastEditedBy = req.user.userId;
+            await document.save();
+            return res.status(200).json(document);
         }
+
     } catch (err) {
         res.status(err.status || 500).json({ message: err.message || 'An error occurred while updating the document.' });
     }
@@ -152,7 +197,9 @@ export const deleteDocument = async (req, res) => {
             return res.status(200).json({ message: 'Document deleted successfully,' });
         }
         if (document.kind === 'upload') {
-            return res.status(400).json({ message: 'Uploads are not supported yet.' });
+            await deleteS3File(document.fileUrl);
+            await document.deleteOne();
+            return res.status(200).json({ message: 'Document deleted successfully.' });
         }
     } catch (err) {
         res.status(err.status || 500).json({ message: err.message || 'An error occurred while deleting the document.' });
