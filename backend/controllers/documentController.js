@@ -1,15 +1,15 @@
-import Document from '../models/documentModel.js';
-import User from '../models/userModel.js';
+import Document from '../models/Document.js';
+import User from '../models/User.js';
 import { getFile, createFile, updateFile } from '../services/githubService.js';
 
 const getGithubToken = async (userId) => {
-    const user = await User.findById(userId).select('githubAccessToken');
-    if (!user || !user.githubToken) {
-        const err = new Error(`Github account is not connected`);
+    const user = await User.findById(userId).select('+githubAccessToken');
+    if (!user || !user.githubAccessToken) {
+        const err = new Error('Github account is not connected');
         err.status = 400;
         throw err;
     }
-    return user.githubToken;
+    return user.githubAccessToken;
 };
 
 
@@ -56,3 +56,32 @@ export const createDocument = async (req, res) => {
     }
 };
 
+export const getDocument = async (req, res) => {
+    try {
+        const document = await Document.findById(req.params.id);
+        if (!document) {
+            return res.status(404).json({ message: 'Document not found' });
+        }
+        if (document.kind === 'native') {
+            return res.status(200).json(document);
+        }
+        if (document.kind === 'git') {
+            const token = await getGithubToken(req.user.userId);
+            const file = await getFile(token, document.owner, document.repo, document.path);
+            if (!file) {
+                return res.status(404).json({ message: 'File not found in Github repo.' });
+            }
+            document.content = file.content;
+            document.sha = file.sha;
+            await document.save();
+
+            return res.status(200).json(document);
+        }
+        if (document.kind === 'upload') {
+            return res.status(400).json({ message: 'Uploads are not supported yet.' });
+        }
+    }
+    catch (err) {
+        res.status(err.status || 500).json({ message: err.message || 'An error occurred while fetching the document.' });
+    }
+}
