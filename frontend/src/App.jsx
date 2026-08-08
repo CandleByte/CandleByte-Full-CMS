@@ -1,7 +1,10 @@
+import { Login } from "./pages/Login.jsx";
+
 export const App = () => {
     return (
         <div>
             <h1>CandleByte Content Management System is building...</h1>
+            <Login />
         </div>
     );
 };
