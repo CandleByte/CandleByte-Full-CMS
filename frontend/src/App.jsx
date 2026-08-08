@@ -1,11 +1,18 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Login } from "./pages/Login.jsx";
+import { Dashboard } from "./pages/Dashboard.jsx";
+import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
+import { Navigate } from "react-router-dom";
 
 export const App = () => {
     return (
-        <div>
-            <h1>CandleByte Content Management System is building...</h1>
-            <Login />
-        </div>
+        <Router>
+            <Routes>
+                <Route path="/" element={<Navigate to="/login" replace />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            </Routes>
+        </Router>
     );
 };
 
