@@ -5,9 +5,10 @@ import projectRoutes from './routes/projectRoutes.js';
 import githubRoutes from './routes/githubRoutes.js';
 import documentRoutes from './routes/documentRoutes.js';
 import cors from 'cors';
+import env from './config/env.js';
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:5174' }));
+app.use(cors({ origin: env.FRONTEND_URL, credentials: true }));
 
 app.use(express.json());
 app.get('/', (req, res) => {
