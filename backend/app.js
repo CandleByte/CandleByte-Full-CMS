@@ -4,8 +4,10 @@ import auth from './middleware/auth.js';
 import projectRoutes from './routes/projectRoutes.js';
 import githubRoutes from './routes/githubRoutes.js';
 import documentRoutes from './routes/documentRoutes.js';
+import cors from 'cors';
 
 const app = express();
+app.use(cors({ origin: 'http://localhost:5174' }));
 
 app.use(express.json());
 app.get('/', (req, res) => {
