@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../store/authSlice";
 
 export const Login = () => {
     const [loginInput, setLoginInput] = useState("");
@@ -7,6 +9,7 @@ export const Login = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -29,7 +32,7 @@ export const Login = () => {
                 throw new Error(data.message || 'Login failed');
             }
 
-            localStorage.setItem('token', data.token);
+            dispatch(setCredentials({ token: data.token }));
             navigate('/dashboard');
         } catch (err) {
             setError(err.message);
