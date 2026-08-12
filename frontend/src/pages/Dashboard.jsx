@@ -18,6 +18,7 @@ export const Dashboard = () => {
             <h1>Dashboard</h1>
             <p>Welcome to your dashboard!</p>
             <Link to="/projects">Projects</Link>
+            <Link to="/newproject">Create New Project</Link>
             <button onClick={handleLogout}>Logout</button>
         </div>
     );
