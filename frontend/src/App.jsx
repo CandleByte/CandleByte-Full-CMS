@@ -5,7 +5,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 import { Navigate } from "react-router-dom";
 import { Projects } from "./pages/Projects.jsx";
 import { CreateProject } from "./pages/CreateProject.jsx";
-
+import { ProjectDetail } from './pages/ProjectDetail.jsx'
 
 export const App = () => {
     return (
@@ -16,6 +16,7 @@ export const App = () => {
                 <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                 <Route path="/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
                 <Route path="/newproject" element={<ProtectedRoute><CreateProject /></ProtectedRoute>} />
+                <Route path="/projects/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
             </Routes>
         </Router>
     );

@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
+
 
 export const Projects = () => {
     const [projects, setProjects] = useState([]);
@@ -37,7 +39,9 @@ export const Projects = () => {
     return (
         <ul>
             {projects.map((project) => (
-                <li key={project._id}>{project.name}</li>
+                <li key={project._id}>
+                    <Link to={`/projects/${project._id}`}>{project.name}</Link>
+                </li>
             ))}
         </ul>
     );
