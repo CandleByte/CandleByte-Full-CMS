@@ -82,6 +82,7 @@ export const ProjectDetail = () => {
                     </ul>
                 )}
             <h4>{project.status}</h4>
+            <Link to={`/projects/${id}/documents/new`}>New document</Link>
         </div>
     );
 };

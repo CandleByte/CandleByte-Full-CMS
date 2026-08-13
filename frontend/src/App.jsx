@@ -8,6 +8,7 @@ import { CreateProject } from "./pages/CreateProject.jsx";
 import { ProjectDetail } from './pages/ProjectDetail.jsx'
 import { DocumentDetail } from './pages/DocumentDetail.jsx';
 import { EditDocument } from './pages/EditDocument.jsx';
+import { CreateDocument } from './pages/CreateDocument.jsx';
 
 export const App = () => {
     return (
@@ -21,6 +22,7 @@ export const App = () => {
                 <Route path="/projects/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
                 <Route path="/documents/:id" element={<ProtectedRoute><DocumentDetail /></ProtectedRoute>} />
                 <Route path="/documents/:id/edit" element={<ProtectedRoute><EditDocument /></ProtectedRoute>} />
+                <Route path="/projects/:id/documents/new" element={<ProtectedRoute><CreateDocument /></ProtectedRoute>} />
             </Routes>
         </Router>
     );
