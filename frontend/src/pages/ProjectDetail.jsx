@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 export const ProjectDetail = () => {
     const { id } = useParams();
@@ -59,7 +59,7 @@ export const ProjectDetail = () => {
             }
         }
         fetchDocuments();
-    },[id]);
+    }, [id]);
 
     if (loading) return <p>Project is loading...</p>;
     if (error) return <p style={{ color: 'red' }}>{error}</p>;
@@ -74,10 +74,13 @@ export const ProjectDetail = () => {
                 : (
                     <ul>
                         {documents.map((doc) => (
-                            <li key={doc._id}>{doc.title}</li>
+                            <li key={doc._id}>
+                                <Link to={`/documents/${doc._id}`}>{doc.title}
+                                </Link>
+                            </li>
                         ))}
                     </ul>
-            )}
+                )}
             <h4>{project.status}</h4>
         </div>
     );
