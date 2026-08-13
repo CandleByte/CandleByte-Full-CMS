@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import  ReactMarkdown  from 'react-markdown';
+import { useParams, Link } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 
 export const DocumentDetail = () => {
 
@@ -53,6 +53,7 @@ export const DocumentDetail = () => {
             {document.kind === 'upload' && (
                 <img src={document.fileUrl} alt={document.title} style={{ maxWidth: '100%' }} />
             )}
+            <Link to={`/documents/${id}/edit`}>Edit</Link>
 
         </div>
     );
