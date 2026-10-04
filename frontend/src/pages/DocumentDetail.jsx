@@ -44,17 +44,42 @@ export const DocumentDetail = () => {
     if (!document) return null;
 
     return (
-        <div>
-            <h1>{document.title}</h1>
-            {(document.kind === 'native' || document.kind === 'git') && (
-                <ReactMarkdown>{document.content}</ReactMarkdown>
-            )}
+        <div className="min-h-screen">
+            <main className="max-w-3xl mx-auto px-6 py-24">
 
-            {document.kind === 'upload' && (
-                <img src={document.fileUrl} alt={document.title} style={{ maxWidth: '100%' }} />
-            )}
-            <Link to={`/documents/${id}/edit`}>Edit</Link>
+                <div className="flex items-start justify-between gap-6">
+                    <h1 className="font-tech text-4xl tracking-tight text-ice">
+                        {document.title}
+                    </h1>
+                    <Link
+                        to={`/documents/${id}/edit`}
+                        className="shrink-0 font-tech text-sm uppercase tracking-wider border border-border text-muted rounded-md px-4 py-2 hover:border-periwinkle hover:text-periwinkle transition-colors"
+                    >
+                        Edit
+                    </Link>
+                </div>
 
+                <p className="font-tech text-xs uppercase tracking-widest text-muted mt-3">
+                    {document.kind}
+                </p>
+
+                <div className="mt-12 border-t border-border pt-12">
+                    {(document.kind === 'native' || document.kind === 'git') && (
+                        <div className="font-body text-text leading-relaxed [&_h1]:font-tech [&_h1]:text-2xl [&_h1]:text-ice [&_h1]:mt-8 [&_h1]:mb-4 [&_h2]:font-tech [&_h2]:text-xl [&_h2]:text-ice [&_h2]:mt-8 [&_h2]:mb-3 [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4 [&_a]:text-periwinkle [&_a]:underline [&_code]:font-mono [&_code]:text-sm [&_code]:bg-bg-dark [&_code]:px-1 [&_code]:rounded">
+                            <ReactMarkdown>{document.content}</ReactMarkdown>
+                        </div>
+                    )}
+
+                    {document.kind === 'upload' && (
+                        <img
+                            src={document.fileUrl}
+                            alt={document.title}
+                            className="w-full rounded-md border border-border"
+                        />
+                    )}
+                </div>
+
+            </main>
         </div>
     );
 }

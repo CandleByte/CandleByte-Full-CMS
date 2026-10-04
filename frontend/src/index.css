@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+@theme {
+    --color-bg-dark: #0d0d1a;
+    --color-bg: #1b1b2f;
+    --color-surface: #2d2d44;
+    --color-periwinkle: #a8b1ff;
+    --color-ice: #eef4ff;
+    --color-text: #c5e4ff;
+    --color-name: #a8b1ff;
+    --color-shadow: #4c4392;
+    --color-glow: #886fef;
+    --color-muted: #8b8ba7;
+    --color-border: #2a2a42;
+    --font-display: "Kenia", cursive;
+    --font-heading: "Arbutus", serif;
+    --font-body: "Molengo", sans-serif;
+    --font-tech: "Tektur", sans-serif;
+    --font-iso: "Rubik Iso", cursive;
+    --font-swash: "Macondo Swash Caps", cursive;
+    --font-creep: "Creepster", cursive;
+}
+
+body {
+    background: linear-gradient(180deg, #0d0d1a, #1b1b2f);
+    margin: 0;
+}
