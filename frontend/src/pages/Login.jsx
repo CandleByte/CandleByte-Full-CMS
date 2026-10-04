@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../store/authSlice";
+import logo from "../utils/candlebyte.png";
 
 export const Login = () => {
     const [loginInput, setLoginInput] = useState("");
@@ -44,8 +45,12 @@ export const Login = () => {
     return (
         <div className="min-h-screen flex items-center justify-center px-6">
             <div className="w-full max-w-sm">
+                <img
+                    src={logo}
+                    alt="CandleByte"
+                    className="w-50 mx-auto mb-6" />
 
-                <h1 className="font-tech text-3xl tracking-tight text-ice text-center">
+                <h1 className="font-tech text-5xl tracking-tight text-ice text-center">
                     CandleByte
                 </h1>
                 <p className="font-body text-sm text-muted text-center mt-2">
