@@ -33,6 +33,7 @@ export const NavBar = () => {
                     <NavLink to="/projects" className={linkClass}>
                         Projects
                     </NavLink>
+                    
                     <button
                         onClick={handleLogout}
                         className="font-tech text-sm uppercase tracking-wider text-muted hover:text-ice transition-colors"

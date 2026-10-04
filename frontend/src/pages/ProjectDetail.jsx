@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export const ProjectDetail = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const [project, setProject] = useState(null);
     const [error, setError] = useState(null);
@@ -60,6 +62,33 @@ export const ProjectDetail = () => {
         }
         fetchDocuments();
     }, [id]);
+
+    const handleDelete = async () => {
+        if (!window.confirm('Are you sure you want to delete this project?')) {
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('token');
+
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/projects/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Could not delete project');
+            }
+            navigate('/projects');
+        } catch (error) {
+            setError(error.message);
+        }
+        navigate('/projects');
+    };
 
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center">
@@ -140,6 +169,12 @@ export const ProjectDetail = () => {
                         </ul>
                     )}
                 </div>
+                <button
+                    onClick={handleDelete}
+                    className="mt-16 font-tech text-sm uppercase tracking-wider border border-border text-muted rounded-md px-4 py-2 hover:border-red-800 hover:text-red-400 transition-colors"
+                >
+                    Delete Project
+                </button>
 
             </main>
         </div>
