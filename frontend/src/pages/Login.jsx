@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../store/authSlice";
+import { Link } from "react-router-dom";
 import logo from "../utils/candlebyte.png";
 
 export const Login = () => {
@@ -81,6 +82,12 @@ export const Login = () => {
                         {loading ? 'Signing in...' : 'Sign in'}
                     </button>
                 </form>
+                <p className="font-body text-sm text-muted text-center mt-8">
+                    Need an account?{' '}
+                    <Link to="/register" className="text-periwinkle hover:text-ice transition-colors">
+                        Register
+                    </Link>
+                </p>
             </div>
         </div>
     );

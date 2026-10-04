@@ -10,6 +10,7 @@ import { DocumentDetail } from './pages/DocumentDetail.jsx';
 import { EditDocument } from './pages/EditDocument.jsx';
 import { CreateDocument } from './pages/CreateDocument.jsx';
 import { Layout } from "./components/Layout.jsx";
+import { Register } from "./pages/Register.jsx";
 
 export const App = () => {
     return (
@@ -17,7 +18,7 @@ export const App = () => {
             <Routes>
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route path="/login" element={<Login />} />
-
+                <Route path="/register" element={<Register />} />
                 <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/projects" element={<Projects />} />
