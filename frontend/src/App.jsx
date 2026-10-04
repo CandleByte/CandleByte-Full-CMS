@@ -9,6 +9,7 @@ import { ProjectDetail } from './pages/ProjectDetail.jsx'
 import { DocumentDetail } from './pages/DocumentDetail.jsx';
 import { EditDocument } from './pages/EditDocument.jsx';
 import { CreateDocument } from './pages/CreateDocument.jsx';
+import { Layout } from "./components/Layout.jsx";
 
 export const App = () => {
     return (
@@ -16,17 +17,21 @@ export const App = () => {
             <Routes>
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                <Route path="/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
-                <Route path="/newproject" element={<ProtectedRoute><CreateProject /></ProtectedRoute>} />
-                <Route path="/projects/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
-                <Route path="/documents/:id" element={<ProtectedRoute><DocumentDetail /></ProtectedRoute>} />
-                <Route path="/documents/:id/edit" element={<ProtectedRoute><EditDocument /></ProtectedRoute>} />
-                <Route path="/projects/:id/documents/new" element={<ProtectedRoute><CreateDocument /></ProtectedRoute>} />
+
+                <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/projects" element={<Projects />} />
+                    <Route path="/newproject" element={<CreateProject />} />
+                    <Route path="/projects/:id" element={<ProjectDetail />} />
+                    <Route path="/documents/:id" element={<DocumentDetail />} />
+                    <Route path="/documents/:id/edit" element={<EditDocument />} />
+                    <Route path="/projects/:id/documents/new" element={<CreateDocument />} />
+                </Route>
             </Routes>
         </Router>
     );
 };
+
 
 
 

@@ -14,19 +14,6 @@ export const Dashboard = () => {
     return (
         <div className="min-h-screen">
 
-            <header className="w-full border-b border-border">
-                <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-                    <span className="font-tech text-sm tracking-widest text-ice uppercase">
-                        CandleByte
-                    </span>
-                    <button
-                        onClick={handleLogout}
-                        className="font-tech text-sm text-muted hover:text-ice transition-colors"
-                    >
-                        Logout
-                    </button>
-                </div>
-            </header>
 
             <main className="max-w-5xl mx-auto px-6 py-24">
                 <h1 className="font-tech text-5xl tracking-tight text-ice">
