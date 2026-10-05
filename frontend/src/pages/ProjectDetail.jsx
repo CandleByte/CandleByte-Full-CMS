@@ -87,7 +87,6 @@ export const ProjectDetail = () => {
         } catch (error) {
             setError(error.message);
         }
-        navigate('/projects');
     };
 
     if (loading) return (
@@ -120,13 +119,22 @@ export const ProjectDetail = () => {
                         <p className="font-tech text-xs uppercase tracking-widest text-muted mt-3">
                             {project.status}
                         </p>
+
                     </div>
-                    <Link
-                        to="/projects"
-                        className="shrink-0 font-tech text-sm uppercase tracking-wider text-muted hover:text-ice transition-colors"
-                    >
-                        ← All projects
-                    </Link>
+                    <div className="flex-col justify-between gap-3 flex">
+                        <Link
+                            to="/projects"
+                            className="shrink-0 font-tech text-sm uppercase tracking-wider text-muted hover:text-ice transition-colors"
+                        >
+                            ← All projects
+                        </Link>
+                        <Link
+                            to={`/projects/${id}/edit`}
+                            className="shrink-0 font-tech text-sm uppercase tracking-wider border border-border text-muted rounded-md px-4 py-2 hover:border-periwinkle hover:text-periwinkle transition-colors"
+                        >
+                            Edit Project
+                        </Link>
+                    </div>
                 </div>
 
                 <p className="font-body text-text leading-relaxed mt-6">
@@ -169,6 +177,7 @@ export const ProjectDetail = () => {
                         </ul>
                     )}
                 </div>
+
                 <button
                     onClick={handleDelete}
                     className="mt-16 font-tech text-sm uppercase tracking-wider border border-border text-muted rounded-md px-4 py-2 hover:border-red-800 hover:text-red-400 transition-colors"
