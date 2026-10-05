@@ -58,7 +58,7 @@ The lifecycle:
 The 409 propagates from the service layer up through the controller to the UI, which shows the conflict, refetches the live version from GitHub, and displays it alongside the user's unsaved text:
 
 ![Conflict detection](docs/conflict1.png)
-![Conflict resolution](docs/conflict2/png)
+![Conflict resolution](docs/conflict2.png)
 
 This is deliberately **detect-and-inform**, not auto-merge. Automatic merging of conflicting edits is a much larger problem, and failing loudly is better than resolving incorrectly.
 
