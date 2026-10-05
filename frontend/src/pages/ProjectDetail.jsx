@@ -147,12 +147,20 @@ export const ProjectDetail = () => {
                         <h2 className="font-tech text-xl tracking-tight text-ice">
                             Documents
                         </h2>
-                        <Link
-                            to={`/projects/${id}/documents/new`}
-                            className="shrink-0 font-tech text-sm uppercase tracking-wider border border-periwinkle text-periwinkle rounded-md px-4 py-2 hover:bg-periwinkle hover:text-bg-dark transition-colors"
-                        >
-                            New document
-                        </Link>
+                        <div className="flex gap-3 shrink-0">
+                            <Link
+                                to={`/projects/${id}/documents/import`}
+                                className="shrink-0 font-tech text-sm uppercase tracking-wider border border-border text-muted rounded-md px-4 py-2 hover:border-periwinkle hover:text-periwinkle transition-colors"
+                            >
+                                Import document
+                            </Link>
+                            <Link
+                                to={`/projects/${id}/documents/new`}
+                                className="shrink-0 font-tech text-sm uppercase tracking-wider border border-periwinkle text-periwinkle rounded-md px-4 py-2 hover:bg-periwinkle hover:text-bg-dark transition-colors"
+                            >
+                                New document
+                            </Link>
+                        </div>
                     </div>
 
                     {documents.length === 0 ? (

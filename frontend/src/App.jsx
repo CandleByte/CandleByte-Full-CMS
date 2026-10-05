@@ -12,6 +12,8 @@ import { CreateDocument } from './pages/CreateDocument.jsx';
 import { Layout } from "./components/Layout.jsx";
 import { Register } from "./pages/Register.jsx";
 import { EditProject } from "./pages/EditProject.jsx";
+import { ImportDocuments } from "./pages/ImportDocuments.jsx";
+
 export const App = () => {
     return (
         <Router>
@@ -28,6 +30,7 @@ export const App = () => {
                     <Route path="/documents/:id/edit" element={<EditDocument />} />
                     <Route path="/projects/:id/edit" element={<EditProject />} />
                     <Route path="/projects/:id/documents/new" element={<CreateDocument />} />
+                    <Route path="/projects/:id/documents/import" element={<ImportDocuments />} />
                 </Route>
             </Routes>
         </Router>
