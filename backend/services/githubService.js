@@ -17,6 +17,33 @@ export const getFile = async (token, owner, repo, path) => {
     };
 };
 
+export const listFiles = async (token, owner, repo, path) => {
+    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+        headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github+json',
+            'User-Agent': 'candlebyte-cms'
+        }
+    });
+
+    if (response.status === 404) return null;
+
+    if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(`Github ${response.status}: ${err.message || response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    if (!Array.isArray(data)) return null;
+
+    return data.filter((entry) => entry.type === 'file' && entry.name.endsWith('.md')).map((entry) => ({
+        name: entry.name,
+        path: entry.path,
+        sha: entry.sha
+    }));
+};
+
 export const createFile = async (token, owner, repo, path, content, message) => {
     const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
         method: 'PUT',

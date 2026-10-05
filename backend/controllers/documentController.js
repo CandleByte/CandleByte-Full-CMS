@@ -1,6 +1,6 @@
 import Document from '../models/Document.js';
 import User from '../models/User.js';
-import { getFile, createFile, updateFile, deleteFile } from '../services/githubService.js';
+import { getFile, createFile, updateFile, deleteFile, listFiles } from '../services/githubService.js';
 import { uploadS3File, getS3FileUrl, deleteS3File } from '../services/s3Service.js';
 
 const getGithubToken = async (userId) => {
@@ -179,6 +179,61 @@ export const getDocumentsByProject = async (req, res) => {
         res.status(err.status || 500).json({ message: err.message || 'An error occurred while fetching documents for the project.' });
     }
 }
+
+export const browseRepo = async (req, res) => {
+    try {
+        const { owner, repo, path } = req.query;
+
+        if (!owner || !repo) {
+            return res.status(400).json({ message: 'Owner and repo are required query parameters.' });
+        }
+
+        const token = await getGithubToken(req.user.userId);
+        const files = await listFiles(token, owner, repo, path || '');
+
+        if (!files) {
+            return res.status(404).json({ message: 'Repository or folder not found.' });
+        }
+
+        return res.status(200).json(files);
+    } catch (err) {
+        res.status(err.status || 500).json({ message: err.message || 'An error occurred while browsing the repository.' });
+    }
+};
+
+export const importDocument = async (req, res) => {
+    const { title, project, owner, repo, path, branch } = req.body;
+    if (!project || !owner || !repo || !path) {
+        return res.status(400).json({ message: 'Project, owner, repo and path are required fields.' });
+    }
+
+
+    try {
+        const token = await getGithubToken(req.user.userId);
+        const file = await getFile(token, owner, repo, path);
+        if (!file) {
+            return res.status(404).json({ message: 'File not found in Github repo.' });
+        }
+
+        const newDocument = new Document({
+            title: title || path.split('/').pop(),
+            kind: 'git',
+            project,
+            content: file.content,
+            owner,
+            repo,
+            path,
+            branch: branch || 'main',
+            sha: file.sha,
+            createdBy: req.user.userId
+        });
+
+        await newDocument.save();
+        return res.status(201).json(newDocument);
+    } catch (err) {
+        res.status(err.status || 500).json({ message: err.message || 'An error occurred while importing the document.' });
+    }
+};
 
 export const deleteDocument = async (req, res) => {
     try {
